@@ -1,8 +1,13 @@
-<div class="bg-blue-500 text-white p-10 rounded-lg shadow-xl m-10">
-  <h1 class="text-4xl font-bold text-center">
-    Tailwind CSS is working!
-  </h1>
-  <p class="text-center mt-4">
-    This box should be blue with white text, centered, and have a shadow.
-  </p>
+<div class="bg-gray-100 flex flex-col items-center justify-center p-10 w-full">
+  <div class="max-w-2xl text-center p-8">
+    <h1 class="text-4xl font-bold text-gray-900 mb-4">Welcome to Solva</h1>
+
+    <p class="text-lg text-gray-600 mb-8">
+      Join our community and discover amazing features that await you.
+    </p>
+
+    <div class="space-x-4">
+      <%= link_to "Get Started Now", new_user_session_path, class: "inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors" %>
+    </div>
+  </div>
 </div>
