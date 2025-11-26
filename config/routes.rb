@@ -1,4 +1,12 @@
 Rails.application.routes.draw do
+  # get "workspaces/index"
+  # get "workspaces/show"
+  # get "workspaces/new"
+  # get "workspaces/create"
+  # get "workspaces/edit"
+  # get "workspaces/update"
+  # get "workspaces/destroy"
+  resources :workspaces
   devise_for :users
   get "home/index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

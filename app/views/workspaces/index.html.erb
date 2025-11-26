@@ -1,0 +1,9 @@
+<div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="py-8">
+    <div class="space-y-4">
+      <% @workspaces.each do |workspace| %>
+        <%= link_to workspace.name, workspace_path(workspace), class: "block text-left text-lg font-medium text-gray-900 hover:text-indigo-600 transition duration-150 ease-in-out" %>
+      <% end %>
+    </div>
+  </div>
+</div>
