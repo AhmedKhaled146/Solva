@@ -59,7 +59,6 @@ class WorkspacesController < ApplicationController
     end
   end
 
-
   def destroy
     @workspace.destroy
     respond_to do |format|

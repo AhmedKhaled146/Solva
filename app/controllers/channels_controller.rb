@@ -88,11 +88,4 @@ class ChannelsController < ApplicationController
   def channel_params
     params.require(:channel).permit(:name, :description, :privacy)
   end
-
-  # def authorize_channel_owner
-  #   unless @current_user == @channel.owner
-  #     redirect_to workspace_path(@workspace),
-  #                 alert: "You are not authorized to perform this action."
-  #   end
-  # end
 end
