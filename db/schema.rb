@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_26_142216) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_27_163026) do
+  create_table "channel_memberships", force: :cascade do |t|
+    t.integer "channel_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["channel_id"], name: "index_channel_memberships_on_channel_id"
+    t.index ["user_id", "channel_id"], name: "index_channel_memberships_on_user_id_and_channel_id", unique: true
+    t.index ["user_id"], name: "index_channel_memberships_on_user_id"
+  end
+
   create_table "channels", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -75,6 +85,8 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_26_142216) do
     t.index ["invited_token"], name: "index_workspaces_on_invited_token", unique: true
   end
 
+  add_foreign_key "channel_memberships", "channels"
+  add_foreign_key "channel_memberships", "users"
   add_foreign_key "channels", "workspaces"
   add_foreign_key "memberships", "users"
   add_foreign_key "memberships", "workspaces"

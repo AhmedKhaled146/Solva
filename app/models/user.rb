@@ -9,6 +9,9 @@ class User < ApplicationRecord
   has_many :memberships, dependent: :destroy
   has_many :workspaces, through: :memberships
 
+  has_many :channel_memberships, dependent: :destroy
+  has_many :channels, through: :channel_memberships
+
   has_many :messages, dependent: :destroy
   has_many :replies, dependent: :destroy
 end
