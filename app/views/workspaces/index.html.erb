@@ -1,8 +1,32 @@
 <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
   <div class="py-8">
-    <div class="space-y-4">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">Your Workspaces</h1>
+
+    <div class="space-y-3">
       <% @workspaces.each do |workspace| %>
-        <%= link_to workspace.name, workspace_path(workspace), class: "block text-left text-lg font-medium text-gray-900 hover:text-indigo-600 transition duration-150 ease-in-out" %>
+        <% membership = workspace.memberships.find { |m| m.user_id == current_user.id } %>
+
+        <div class="flex items-center justify-between bg-white rounded-lg shadow-sm px-4 py-3">
+          <div>
+            <%= link_to workspace_path(workspace),
+                        class: "text-lg font-medium text-gray-900 hover:text-indigo-600 transition duration-150 ease-in-out" do %>
+              <%= workspace.name %>
+            <% end %>
+
+            <% if membership.present? %>
+              <p class="text-xs text-gray-500 mt-1">
+                Your role:
+                <span class="font-semibold">
+                  <%= membership.role.humanize %>
+                </span>
+              </p>
+            <% end %>
+          </div>
+
+          <div class="text-xs text-gray-400">
+            Created: <%= workspace.created_at.strftime("%Y-%m-%d") %>
+          </div>
+        </div>
       <% end %>
     </div>
   </div>

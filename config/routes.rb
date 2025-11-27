@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+  # get "channels/index"
+  # get "channels/show"
+  # get "channels/new"
+  # get "channels/create"
+  # get "channels/edit"
+  # get "channels/update"
+  # get "channels/destroy"
   # get "workspaces/index"
   # get "workspaces/show"
   # get "workspaces/new"
@@ -6,9 +13,13 @@ Rails.application.routes.draw do
   # get "workspaces/edit"
   # get "workspaces/update"
   # get "workspaces/destroy"
-  resources :workspaces
+  resources :workspaces do
+    resources :channels
+  end
   devise_for :users
   get "home/index"
+  get "join/:invited_token", to: "workspaces#join", as: :join_workspace
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

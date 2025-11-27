@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_24_181812) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_26_142216) do
   create_table "channels", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -72,6 +72,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_24_181812) do
     t.string "invited_token"
     t.string "name", null: false
     t.datetime "updated_at", null: false
+    t.index ["invited_token"], name: "index_workspaces_on_invited_token", unique: true
   end
 
   add_foreign_key "channels", "workspaces"
