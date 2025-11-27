@@ -17,18 +17,21 @@ class ChannelsController < ApplicationController
   def create
     @channel = @workspace.channels.new(channel_params)
 
-    respond_to do |format|
-      if @channel.save
-        format.html do
-          redirect_to workspace_path(@workspace),
-                      notice: "Channel #{@channel.name} created successfully."
-        end
-      else
-        format.html do
-          render :new,
-                 status: :unprocessable_entity
-        end
-      end
+    wants_private = @channel.privacy_private?
+    is_owner      = @workspace.role_owner?(current_user)
+    is_admin      = @workspace.role_admin?(current_user)
+
+    if wants_private && !is_owner && !is_admin
+      redirect_to workspace_path(@workspace),
+                  alert: "Only admins and owners can create private channels."
+      return
+    end
+
+    if @channel.save
+      redirect_to workspace_path(@workspace),
+                  notice: "Channel #{@channel.name} created successfully."
+    else
+      render :new, status: :unprocessable_entity
     end
   end
 

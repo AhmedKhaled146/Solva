@@ -53,11 +53,17 @@
           </div>
         </div>
 
+        <% can_create_private = @workspace.role_owner?(current_user) || @workspace.role_admin?(current_user) %>
+
         <div>
           <%= form.label :privacy, class: "block text-sm font-medium text-gray-700" %>
           <div class="mt-1">
             <%= form.select :privacy,
-                            ['public', 'private'],
+                            options_for_select(
+                              can_create_private ?
+                                [["Public", "public"], ["Private", "private"]] :
+                                [["Public", "public"]]
+                            ),
                             {},
                             class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
           </div>

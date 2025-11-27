@@ -61,8 +61,15 @@
     <div class="mt-8 px-6">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-semibold text-gray-800">Channels</h3>
-        <%= link_to 'New Channel', new_workspace_channel_path(@workspace),
-                    class: 'inline-flex items-center px-4 py-2 border border-indigo-600 rounded-md text-sm font-medium text-indigo-600 hover:bg-indigo-600 hover:text-white transition-colors duration-150' %>
+        <div class="flex items-center gap-4">
+          <%= link_to 'New Channel', new_workspace_channel_path(@workspace),
+                      class: 'inline-flex items-center px-4 py-2 border border-indigo-600 rounded-md text-sm font-medium text-indigo-600 hover:bg-indigo-600 hover:text-white transition-colors duration-150' %>
+
+          <%= link_to workspace_channels_path(@workspace),
+                      class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
+            Show All Channels
+          <% end %>
+        </div>
       </div>
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">

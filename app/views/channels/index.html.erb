@@ -3,8 +3,11 @@
     <div class="mt-8 px-6">
   <div class="flex justify-between items-center mb-4">
     <h3 class="text-lg font-semibold text-gray-800">Channels</h3>
-    <%= link_to 'New Channel', new_workspace_channel_path(@workspace),
-                class: 'inline-flex items-center px-4 py-2 border border-indigo-600 rounded-md text-sm font-medium text-indigo-600 hover:bg-indigo-600 hover:text-white transition-colors duration-150' %>
+    <div class="flex space-x-4">
+      <%= link_to 'New Channel', new_workspace_channel_path(@workspace),
+                  class: 'inline items-center px-4 py-2 border border-indigo-600 rounded-md text-sm font-medium text-indigo-600 hover:bg-indigo-600 hover:text-white transition-colors duration-150' %>
+      <%= link_to 'Back', workspace_path(@workspace), class: "inline bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
+    </div>
   </div>
   <div class="overflow-x-auto">
     <table class="min-w-full divide-y divide-gray-200">
