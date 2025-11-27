@@ -1,0 +1,28 @@
+<div class="max-w-md mx-auto mt-10 bg-white shadow rounded-lg p-6">
+  <h1 class="text-xl font-semibold mb-4 text-gray-800">
+    Join a workspace with an invite link
+  </h1>
+
+  <% if flash[:alert] %>
+    <div class="mb-4 text-sm text-red-600">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+
+  <%= form_with url: perform_join_workspaces_path, method: :post, local: true do |form| %>
+    <div class="mb-4">
+      <%= form.label :invite_link, "Invite link or token", class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :invite_link,
+                          class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm
+                 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+                          placeholder: "Paste invite link or token here" %>
+    </div>
+
+    <div>
+      <%= form.submit "Join Workspace",
+                      class: "w-full inline-flex justify-center py-2 px-4 border border-transparent
+                 text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700
+                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+    </div>
+  <% end %>
+</div>

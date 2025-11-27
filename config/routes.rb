@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
 
   resources :workspaces do
+    collection do
+      get :join_with_link
+      post :perform_join
+    end
     resources :channels
   end
 

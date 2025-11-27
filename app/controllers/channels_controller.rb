@@ -2,9 +2,18 @@ class ChannelsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_workspace
   before_action :set_channel, only: [ :show, :edit, :update, :destroy ]
+  before_action :authorize_channel_access, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @channels = @workspace.channels
+    is_owner = @workspace.role_owner?(current_user)
+    is_admin = @workspace.role_admin?(current_user)
+
+    @channels =
+      if is_owner || is_admin
+        @workspace.channels
+      else
+        @workspace.channels.where(privacy: "public")
+      end
   end
 
   def show
@@ -90,5 +99,14 @@ class ChannelsController < ApplicationController
 
   def channel_params
     params.require(:channel).permit(:name, :description, :privacy)
+  end
+
+  def authorize_channel_access
+    return if @workspace.role_owner?(current_user)
+    return if @workspace.role_admin?(current_user)
+    return if @channel.privacy_public?
+
+    redirect_to workspace_channels_path(@workspace),
+                alert: "You are not authorized to access this channel."
   end
 end

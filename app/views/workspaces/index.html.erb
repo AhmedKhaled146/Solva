@@ -3,14 +3,19 @@
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold text-gray-900">Your Workspaces</h1>
 
-      <% if @workspaces.empty? %>
-        <%= link_to new_workspace_path,
-                    class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
-          Create Workspace
+      <div class="space-x-4">
+        <% if @workspaces.empty? %>
+          <%= link_to new_workspace_path,
+                      class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
+            Create Workspace
+          <% end %>
         <% end %>
-      <% end %>
+        <%= link_to "Join with invite link",
+                    join_with_link_workspaces_path,
+                    class: "inline-flex items-center px-4 py-2 border border-gray-300
+                   text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50" %>
+      </div>
     </div>
-
     <div class="space-y-3">
       <% @workspaces.each do |workspace| %>
         <% membership = workspace.memberships.find { |m| m.user_id == current_user.id } %>

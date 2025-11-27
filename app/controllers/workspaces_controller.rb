@@ -8,6 +8,15 @@ class WorkspacesController < ApplicationController
   end
 
   def show
+    is_owner = @workspace.role_owner?(current_user)
+    is_admin = @workspace.role_admin?(current_user)
+
+    @channels =
+      if is_owner || is_admin
+        @workspace.channels
+      else
+        @workspace.channels.where(privacy: "public")
+      end
   end
 
   def new
@@ -55,6 +64,49 @@ class WorkspacesController < ApplicationController
           render :edit,
                  status: :unprocessable_entity
         end
+      end
+    end
+  end
+
+  def join_with_link
+  end
+
+  def perform_join
+    raw_input = params[:invite_link].to_s.strip
+
+    token =
+      if raw_input.include?("http")
+        # http://localhost:3000/workspaces/INVITED_TOKEN
+        uri = URI.parse(raw_input) rescue nil
+        if uri && uri.path
+          uri.path.split("/").last
+        end
+      else
+        raw_input
+      end
+
+    workspace = Workspace.find_by(invited_token: token)
+
+    if workspace.nil?
+      redirect_to join_with_link_workspaces_path,
+                  alert: "Invalid or expired invite link."
+      return
+    end
+
+    membership = workspace.memberships.find_or_initialize_by(user: current_user)
+
+    if membership.persisted?
+      redirect_to workspace_path(workspace),
+                  notice: "You already joined this workspace."
+    else
+      membership.role = :member
+
+      if membership.save
+        redirect_to workspace_path(workspace),
+                    notice: "You joined #{workspace.name} successfully."
+      else
+        redirect_to join_with_link_workspaces_path,
+                    alert: "Could not join this workspace."
       end
     end
   end
