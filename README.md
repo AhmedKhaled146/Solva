@@ -33,9 +33,12 @@ rails server
 ```
 5. Open your browser and navigate to http://localhost:3000 to access Solva
 
+## ERD (Entity Relationship Diagram):
 ![Solva ERD](app/assets/images/Solva.drawio.png)
 
+## MAPPING:
 [//]: # (for mapping)
+wait for it ....
 
 ### Key Features:
 

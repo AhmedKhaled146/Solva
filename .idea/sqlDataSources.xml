@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="33a6cffc-49b4-4b52-b501-020afe5e3ce1" name="solva: development Mapping">
+      <data-sources db="29429202-60b6-46e9-a43b-774cd98e6882" />
+      <scope>
+        <node kind="database" negative="1">
+          <node kind="schema" negative="1" />
+        </node>
+      </scope>
+    </mapping>
+  </component>
+</project>

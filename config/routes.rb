@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get "memberships/index"
+  get "memberships/update"
+  get "memberships/destroy"
 
   resources :workspaces do
     collection do
@@ -6,6 +9,7 @@ Rails.application.routes.draw do
       post :perform_join
     end
     resources :channels
+    resources :memberships, only: [ :index, :update, :destroy ]
   end
 
   devise_for :users

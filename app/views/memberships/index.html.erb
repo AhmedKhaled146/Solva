@@ -1,0 +1,82 @@
+<div class="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold text-gray-800">
+      Members in "<%= @workspace.name %>"
+    </h2>
+
+    <%= link_to "Back to workspace",
+                workspace_path(@workspace),
+                class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50" %>
+  </div>
+
+  <div class="bg-white shadow rounded-lg overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+      <tr>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          User
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Email
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Role
+        </th>
+        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Actions
+        </th>
+      </tr>
+      </thead>
+
+      <tbody class="bg-white divide-y divide-gray-200">
+      <% @memberships.each do |membership| %>
+        <% user = membership.user %>
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white text-sm font-semibold">
+                <%= user.email.first.upcase %>
+              </div>
+              <span class="ml-3"><%= user.email.split('@').first %></span>
+            </div>
+          </td>
+
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <%= user.email %>
+          </td>
+
+          <td class="px-6 py-4 whitespace-nowrap text-sm">
+            <% if @workspace.role_owner?(current_user) || @workspace.role_admin?(current_user) %>
+              <%= form_with(model: [@workspace, membership],
+                            method: :patch,
+                            local: true,
+                            class: "inline-flex items-center space-x-2") do |f| %>
+                <%= f.select :role,
+                             Membership.roles.keys.map { |r| [r.humanize, r] },
+                             { selected: membership.role },
+                             class: "border-gray-300 rounded-md text-sm" %>
+                <%= f.submit "Update",
+                             class: "ml-2 inline-flex items-center px-3 py-1 border border-indigo-600 text-indigo-600 text-xs font-medium rounded hover:bg-indigo-600 hover:text-white" %>
+              <% end %>
+            <% else %>
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                <%= membership.role.capitalize %>
+              </span>
+            <% end %>
+          </td>
+
+          <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
+            <% if @workspace.role_owner?(current_user) && !membership.role_owner? %>
+              <%= button_to "Remove from workspace",
+                            workspace_membership_path(@workspace, membership),
+                            method: :delete,
+                            data: { turbo_confirm: "Are you sure you want to remove this user from the workspace?" },
+                            class: "text-red-600 hover:text-red-800 text-xs font-medium" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

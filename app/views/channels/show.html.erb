@@ -1,9 +1,8 @@
 <div class="flex h-screen bg-gray-100 w-full">
   <!-- Channel Details Sidebar -->
-  <div class="w-[300px] bg-white border-r">
+  <div class="max-w-[500px] bg-white border-r">
     <div class="p-4">
       <h2 class="text-xl font-bold mb-4">Channel Details</h2>
-
       <div class="border rounded-lg overflow-hidden">
         <table class="w-full">
           <tbody>
@@ -26,6 +25,42 @@
           </tbody>
         </table>
       </div>
+
+      <!-- Workspace Members Section -->
+      <div class="mt-6">
+        <h3 class="text-lg font-semibold mb-3">Workspace Members</h3>
+        <%= link_to "Show all users",
+                    workspace_memberships_path(@workspace),
+                    class: "text-sm text-indigo-600 hover:text-indigo-800 underline" %>
+        <div class="space-y-2">
+          <% @workspace.users.each do |user| %>
+            <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+              <div class="flex items-center">
+                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white">
+                  <%= user.email.first.upcase %>
+                  <!-- The first user letter -->
+                </div>
+                <div class="ml-2">
+                  <p class="text-sm font-medium"><%= user.email %></p>
+                  <p class="text-xs text-gray-500">
+                    <% membership = @workspace.memberships.find { |m| m.user_id == user.id } %>
+                    <%= membership&.role || "member" %>
+                  </p>
+                </div>
+              </div>
+              <span class="text-xs px-2 py-1 rounded-full
+                         <%= case membership&.role
+                             when "owner" then "bg-yellow-100 text-yellow-800"
+                             when "admin" then "bg-purple-100 text-purple-800"
+                             else "bg-gray-100 text-gray-600"
+                             end %>">
+                <%= (membership&.role || "member").capitalize %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
       <%= link_to 'Back', :back, class: "mt-4 inline-block bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
     </div>
   </div>
