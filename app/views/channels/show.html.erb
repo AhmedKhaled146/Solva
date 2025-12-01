@@ -1,4 +1,4 @@
-<div class="flex h-screen bg-gray-100 w-full">
+<div id="channel-show" data-channel-id="<%= @channel.id %>" class="flex h-screen bg-gray-100 w-full">
   <!-- Channel Details Sidebar -->
   <div class="max-w-[500px] bg-white border-r">
     <div class="p-4">
@@ -28,10 +28,12 @@
 
       <!-- Workspace Members Section -->
       <div class="mt-6">
-        <h3 class="text-lg font-semibold mb-3">Workspace Members</h3>
-        <%= link_to "Show all users",
-                    workspace_memberships_path(@workspace),
-                    class: "text-sm text-indigo-600 hover:text-indigo-800 underline" %>
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-lg font-semibold">Workspace Members</h3>
+          <%= link_to "Show all users",
+                      workspace_memberships_path(@workspace),
+                      class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+        </div>
         <div class="space-y-2">
           <% @workspace.users.each do |user| %>
             <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
@@ -61,7 +63,7 @@
         </div>
       </div>
 
-      <%= link_to 'Back', :back, class: "mt-4 inline-block bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
+      <%= link_to 'Back', @workspace, class: "mt-4 inline-block bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
     </div>
   </div>
 
@@ -73,18 +75,25 @@
     </div>
 
     <!-- Messages Area -->
-    <div class="flex-1 overflow-y-auto p-6 space-y-4">
+    <div id="messages" class="flex-1 overflow-y-auto p-6 space-y-4">
       <!-- Messages will be populated here -->
+      <%= render @channel.messages %>
     </div>
 
     <!-- Message Input -->
     <div class="bg-white border-t p-4">
-      <div class="flex items-center space-x-2">
-        <input type="text" placeholder="Type your message..." class="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500">
-        <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
-          Send
-        </button>
-      </div>
+      <%= form_with(
+            model: [@workspace, @channel, Message.new],
+            url: workspace_channel_messages_path(@workspace, @channel),
+            local: true,
+            class: "flex items-center space-x-2"
+          ) do |f| %>
+        <%= f.text_field :body,
+                         placeholder: "Type your message...",
+                         class: "flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" %>
+        <%= f.submit "Send",
+                     class: "bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded" %>
+      <% end %>
     </div>
   </div>
 </div>

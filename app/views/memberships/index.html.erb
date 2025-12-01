@@ -46,13 +46,17 @@
           </td>
 
           <td class="px-6 py-4 whitespace-nowrap text-sm">
-            <% if @workspace.role_owner?(current_user) || @workspace.role_admin?(current_user) %>
+            <% can_manage_roles = (@workspace.role_owner?(current_user) || @workspace.role_admin?(current_user)) %>
+            <% is_owner_membership = membership.role_owner? %>
+            <% is_current_user_membership = (membership.user_id == current_user.id) %>
+
+            <% if can_manage_roles && !is_owner_membership && !is_current_user_membership %>
               <%= form_with(model: [@workspace, membership],
                             method: :patch,
                             local: true,
                             class: "inline-flex items-center space-x-2") do |f| %>
                 <%= f.select :role,
-                             Membership.roles.keys.map { |r| [r.humanize, r] },
+                             Membership.roles.except(:owner).keys.map { |r| [r.humanize, r] },
                              { selected: membership.role },
                              class: "border-gray-300 rounded-md text-sm" %>
                 <%= f.submit "Update",
@@ -61,12 +65,15 @@
             <% else %>
               <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
                 <%= membership.role.capitalize %>
+                <% if is_owner_membership %>
+                  (Owner)
+                <% end %>
               </span>
             <% end %>
           </td>
 
           <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
-            <% if @workspace.role_owner?(current_user) && !membership.role_owner? %>
+            <% if @workspace.role_owner?(current_user) && !membership.role_owner? && membership.user_id != current_user.id %>
               <%= button_to "Remove from workspace",
                             workspace_membership_path(@workspace, membership),
                             method: :delete,

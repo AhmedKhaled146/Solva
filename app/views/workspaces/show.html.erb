@@ -92,7 +92,7 @@
           <% @channels.each do |channel| %>
             <tr>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                <%= channel.name %>
+                <%= link_to channel.name, workspace_channel_path(@workspace, channel), class: 'text-indigo-600 hover:text-indigo-900' %>
               </td>
               <td class="px-6 py-4 text-sm text-gray-900">
                 <%= channel.description %>

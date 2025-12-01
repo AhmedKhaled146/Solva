@@ -10,6 +10,12 @@ class MembershipsController < ApplicationController
   end
 
   def update
+    if @membership.role_owner? || @membership.user_id == current_user.id
+      redirect_to workspace_memberships_path(@workspace),
+                  alert: "You cannot change this user's role."
+      return
+    end
+
     if @membership.update(membership_params)
       redirect_to workspace_memberships_path(@workspace),
                   notice: "Role updated successfully."
@@ -20,9 +26,15 @@ class MembershipsController < ApplicationController
   end
 
   def destroy
-    if @membership.owner?
+    if @membership.role_owner?
       redirect_to workspace_memberships_path(@workspace),
                   alert: "Owner cannot be removed from the workspace."
+      return
+    end
+
+    if @membership.user_id == current_user.id
+      redirect_to workspace_memberships_path(@workspace),
+                  alert: "You cannot remove yourself from the workspace."
       return
     end
 
