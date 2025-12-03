@@ -8,7 +8,6 @@ document.addEventListener("turbo:load", () => {
 
     const channelId = channelElement.dataset.channelId
 
-    console.log("[ChannelMessagesChannel] subscribing to channel", channelId)
 
     consumer.subscriptions.create(
         { channel: "ChannelMessagesChannel", channel_id: channelId },
@@ -22,7 +21,6 @@ document.addEventListener("turbo:load", () => {
             },
 
             received(data) {
-                console.log("[ChannelMessagesChannel] Received:", data)
                 messagesContainer.insertAdjacentHTML("beforeend", data)
                 messagesContainer.scrollTop = messagesContainer.scrollHeight
             }

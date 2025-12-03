@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get "replies/create"
+  get "replies/edit"
+  get "replies/update"
+  get "replies/destroy"
   get "messages/create"
   get "memberships/index"
   get "memberships/update"
@@ -10,7 +14,9 @@ Rails.application.routes.draw do
       post :perform_join
     end
     resources :channels do
-      resources :messages, only: [ :create ]
+      resources :messages do
+        resources :replies
+      end
     end
     resources :memberships, only: [ :index, :update, :destroy ]
   end

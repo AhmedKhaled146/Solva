@@ -1,0 +1,6 @@
+<%= turbo_frame_tag request.headers["Turbo-Frame"] == "message_thread" ? "message_thread" : dom_id(@message) do %>
+  <div class="p-4">
+    <h2 class="text-lg font-bold mb-3">Edit Message</h2>
+    <%= render "form", message: @message, workspace: @workspace, channel: @channel %>
+  </div>
+<% end %>

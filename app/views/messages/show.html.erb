@@ -1,0 +1,38 @@
+<%= turbo_frame_tag "message_thread" do %>
+  <%# Stream for receiving new replies in real-time %>
+  <%= turbo_stream_from @message %>
+
+  <div class="flex flex-col h-full relative">
+    <!-- Close Button -->
+    <button onclick="document.getElementById('message_thread').classList.add('hidden'); document.getElementById('message_thread').innerHTML = '';"
+            class="absolute top-4 right-4 text-gray-500 hover:text-black z-10">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <div class="p-4 border-b">
+      <h2 class="text-lg font-bold">Thread</h2>
+      <div class="mt-2 text-sm text-gray-500"># <%= @channel.name %></div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto p-4">
+      <!-- Original Message -->
+      <div class="mb-6">
+         <%= render "messages/message", message: @message, workspace: @workspace, channel: @channel %>
+      </div>
+
+      <div class="border-t my-4"></div>
+
+      <!-- Replies List -->
+      <div id="message_<%= @message.id %>_replies" class="space-y-4 mb-4">
+        <%= render @message.replies %>
+      </div>
+    </div>
+
+    <!-- Reply Form -->
+    <div class="p-4 border-t bg-gray-50">
+      <%= render "replies/form", message: @message, reply: Reply.new, workspace: @workspace, channel: @channel %>
+    </div>
+  </div>
+<% end %>
