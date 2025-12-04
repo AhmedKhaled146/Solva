@@ -1,51 +1,133 @@
-<div class="py-6 flex flex-col justify-center sm:py-12 m-5">
-  <div class="relative py-3 sm:max-w-xl sm:mx-auto">
-    <div class="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
-      <div class="max-w-md mx-auto">
-        <div class="divide-y divide-gray-200">
-          <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8">Edit Workspace</h2>
+<!-- Simple Edit Workspace Form with Tailwind CSS -->
+<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-8 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-lg">
+    <!-- Header -->
+    <div class="text-center">
+      <div class="flex justify-center mb-6">
+        <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+          </svg>
+        </div>
+      </div>
+      <h2 class="text-center text-3xl font-bold text-gray-900">
+        Edit Workspace Information
+      </h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        Update Your Workspace Information
+      </p>
+    </div>
+  </div>
 
-            <%= form_with(model: @workspace, class: "space-y-4") do |f| %>
-              <% if @workspace.errors.any? %>
-                <div class="rounded-md bg-red-50 p-4 mb-4">
-                  <div class="flex">
-                    <div class="ml-3">
-                      <h3 class="text-sm font-medium text-red-800">
-                        <%= pluralize(@workspace.errors.count, "error") %> prohibited this workspace from being saved:
-                      </h3>
-                      <div class="mt-2 text-sm text-red-700">
-                        <ul class="list-disc pl-5 space-y-1">
-                          <% @workspace.errors.full_messages.each do |msg| %>
-                            <li><%= msg %></li>
-                          <% end %>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              <% end %>
-
-              <div>
-                <%= f.label :name, class: "block text-sm font-medium text-gray-700" %>
-                <div class="mt-1">
-                  <%= f.text_field :name,
-                                   class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm #{'border-red-300' if @workspace.errors[:name].any?}",
-                                   placeholder: "Enter workspace name" %>
-                  <% if @workspace.errors[:name].any? %>
-                    <p class="mt-2 text-sm text-red-600"><%= @workspace.errors[:name].join(', ') %></p>
-                  <% end %>
-                </div>
-              </div>
-
-              <div class="flex items-center justify-end mt-6">
-                <%= f.submit "Update Workspace", class: "ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-                <%= link_to "Cancel", workspaces_path, class: "ml-3 inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-              </div>
-            <% end %>
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-lg">
+    <div class="bg-white py-8 px-6 shadow-lg rounded-lg border border-gray-200">
+      <!-- Workspace Info Banner -->
+      <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 text-blue-600 ml-2" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+          </svg>
+          <div>
+            <h3 class="text-sm font-medium text-blue-800">مساحة العمل الحالية</h3>
+            <p class="text-sm text-blue-600">
+              <%= @workspace.name || "لم يتم تحديد الاسم بعد" %>
+            </p>
           </div>
         </div>
       </div>
+
+      <%= form_with(model: @workspace, class: "space-y-6") do |f| %>
+        <!-- Error Messages -->
+        <% if @workspace.errors.any? %>
+          <div class="rounded-md bg-red-50 border border-red-200 p-4">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+              <div class="ml-3">
+                <h3 class="text-sm font-medium text-red-800">
+                  <%= pluralize(@workspace.errors.count, "خطأ") %> مما منع حفظ مساحة العمل:
+                </h3>
+                <div class="mt-2 text-sm text-red-700">
+                  <ul class="list-disc pl-5 space-y-1">
+                    <% @workspace.errors.full_messages.each do |msg| %>
+                      <li><%= msg %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Workspace Name Field -->
+        <div>
+          <%= f.label :name, "اسم مساحة العمل", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 4a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1V8z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <%= f.text_field :name,
+                             class: "block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition duration-200 ease-in-out text-sm #{'border-red-300 focus:ring-red-500 focus:border-red-500' if @workspace.errors[:name].any?}",
+                             placeholder: "أدخل اسم مساحة العمل الجديد" %>
+          </div>
+          <% if @workspace.errors[:name].any? %>
+            <p class="mt-2 text-sm text-red-600 flex items-center">
+              <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+              </svg>
+              <%= @workspace.errors[:name].join(', ') %>
+            </p>
+          <% else %>
+            <p class="mt-1 text-xs text-gray-500">
+              استخدم اسماً واضحاً ومعبّراً لمساحة العمل
+            </p>
+          <% end %>
+        </div>
+
+        <!-- Guidelines -->
+        <div class="bg-orange-50 border border-orange-200 rounded-lg p-4">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-orange-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-orange-800">نصائح للتعديل:</h3>
+              <div class="mt-2 text-sm text-orange-700">
+                <ul class="list-disc pl-5 space-y-1">
+                  <li>تأكد من وضوح الاسم بعد التعديل</li>
+                  <li>استخدم أسماء توصف الغرض من المساحة</li>
+                  <li>الأعضاء الآخرون سيرون الاسم الجديد فوراً</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200">
+          <%= f.submit "Save",
+                       class: "flex-1 flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition duration-200 ease-in-out" %>
+
+          <%= link_to workspaces_path,
+                      class: "flex-1 flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-200 ease-in-out" do %>
+            Cancel
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Additional Info -->
+    <div class="mt-6 text-center">
+      <p class="text-xs text-gray-500">
+        سيُحفظ التعديل على الفور وسيكون مرئياً لجميع الأعضاء
+      </p>
     </div>
   </div>
 </div>

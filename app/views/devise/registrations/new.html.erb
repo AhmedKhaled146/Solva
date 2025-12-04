@@ -1,45 +1,215 @@
-<div class="flex flex-col sm:px-6 lg:px-8 w-[400px]">
-  <div class="w-500 space-y-8">
-    <div>
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-        Sign up
-      </h2>
+<div class="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <!-- Logo/Brand -->
+    <div class="flex justify-center">
+      <div class="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"/>
+        </svg>
+      </div>
+    </div>
+    <h2 class="mt-6 text-center text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+      انضم إلينا
+    </h2>
+    <p class="mt-2 text-center text-sm text-gray-600">
+      أنشئ حسابك الجديد للبدء في الرحلة
+    </p>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-6 shadow-xl rounded-2xl border border-gray-100 backdrop-blur-sm">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-6" }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <!-- Email Field -->
+        <div>
+          <%= f.label :email, "البريد الإلكتروني", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+              </svg>
+            </div>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email",
+                              class: "block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ease-in-out sm:text-sm",
+                              placeholder: "أدخل بريدك الإلكتروني" %>
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div>
+          <%= f.label :password, "كلمة المرور", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              </svg>
+            </div>
+            <%= f.password_field :password, autocomplete: "new-password",
+                                 class: "block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ease-in-out sm:text-sm",
+                                 placeholder: "كلمة المرور (#{@minimum_password_length} أحرف على الأقل)" %>
+          </div>
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div>
+          <%= f.label :password_confirmation, "تأكيد كلمة المرور", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <%= f.password_field :password_confirmation, autocomplete: "new-password",
+                                 class: "block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ease-in-out sm:text-sm",
+                                 placeholder: "أكد كلمة المرور" %>
+          </div>
+          <!-- Password match indicator -->
+          <div class="mt-1">
+            <p class="text-xs text-red-500 hidden password-match">كلمات المرور غير متطابقة</p>
+            <p class="text-xs text-green-500 hidden password-match-success">كلمات المرور متطابقة ✓</p>
+          </div>
+        </div>
+        <!-- Submit Button -->
+        <div>
+          <%= f.submit "إنشاء حساب",
+                       class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg" %>
+        </div>
+      <% end %>
+      <!-- Links -->
+      <div class="mt-6 text-center">
+        <% if devise_mapping.omniauthable? %>
+          <p class="text-sm text-gray-600">
+            هل لديك حساب بالفعل؟
+            <%= link_to "تسجيل الدخول", new_session_path(resource_name), class: "font-medium text-purple-600 hover:text-purple-500 transition duration-200" %>
+          </p>
+        <% end %>
+      </div>
     </div>
 
-    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "mt-8 space-y-10" }) do |f| %>
-      <%= render "devise/shared/error_messages", resource: resource %>
-
-      <div class="rounded-md shadow-sm -space-y-px">
-        <div>
-          <%= f.label :email, class: "sr-only" %>
-          <%= f.email_field :email, autofocus: true, autocomplete: "email",
-                            class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm",
-                            placeholder: "Email address" %>
-        </div>
-
-        <div>
-          <%= f.label :password, class: "sr-only" %>
-          <%= f.password_field :password, autocomplete: "new-password",
-                               class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm",
-                               placeholder: "Password (#{@minimum_password_length} characters minimum)" %>
-        </div>
-
-        <div>
-          <%= f.label :password_confirmation, class: "sr-only" %>
-          <%= f.password_field :password_confirmation, autocomplete: "new-password",
-                               class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm",
-                               placeholder: "Confirm password" %>
-        </div>
-      </div>
-
-      <div>
-        <%= f.submit "Sign up",
-                     class: "group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-      </div>
-    <% end %>
-
-    <div class="text-sm text-center mt-4">
-      <%= render "devise/shared/links", class: "font-medium text-indigo-600 hover:text-indigo-500" %>
+    <!-- Footer -->
+    <div class="mt-8 text-center">
+      <p class="text-xs text-gray-500">
+        بإنشاء حساب، أنت توافق على شروط استخدام خدمتنا
+      </p>
     </div>
   </div>
 </div>
+
+<!-- Enhanced JavaScript for interactions -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        const passwordField = document.querySelector('input[name="user[password]"]');
+        const confirmPasswordField = document.querySelector('input[name="user[password_confirmation]"]');
+        const passwordStrengthBars = document.querySelectorAll('.h-1');
+        const passwordStrengthText = document.querySelector('.text-xs');
+        const termsCheckbox = document.getElementById('terms');
+        const submitButton = form.querySelector('input[type="submit"]');
+
+        // Password strength indicator
+        if (passwordField) {
+            passwordField.addEventListener('input', function() {
+                const password = this.value;
+                const strength = calculatePasswordStrength(password);
+                updatePasswordStrengthIndicator(strength);
+            });
+        }
+
+        // Password confirmation
+        if (confirmPasswordField) {
+            confirmPasswordField.addEventListener('input', function() {
+                const password = passwordField?.value || '';
+                const confirmPassword = this.value;
+                const match = password === confirmPassword && password.length > 0;
+
+                const matchIndicator = this.parentElement.parentElement.querySelector('.password-match');
+                const successIndicator = this.parentElement.parentElement.querySelector('.password-match-success');
+
+                if (confirmPassword.length > 0) {
+                    if (match) {
+                        matchIndicator?.classList.add('hidden');
+                        successIndicator?.classList.remove('hidden');
+                    } else {
+                        matchIndicator?.classList.remove('hidden');
+                        successIndicator?.classList.add('hidden');
+                    }
+                } else {
+                    matchIndicator?.classList.add('hidden');
+                    successIndicator?.classList.add('hidden');
+                }
+            });
+        }
+
+        // Form validation
+        form.addEventListener('submit', function(e) {
+            if (!termsCheckbox?.checked) {
+                e.preventDefault();
+                alert('يرجى الموافقة على شروط الخدمة وسياسة الخصوصية');
+                return;
+            }
+
+            const password = passwordField?.value || '';
+            const confirmPassword = confirmPasswordField?.value || '';
+
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('كلمات المرور غير متطابقة');
+                return;
+            }
+
+            if (password.length < <%= @minimum_password_length %>) {
+                e.preventDefault();
+                alert(`كلمة المرور يجب أن تكون ${<%= @minimum_password_length %>} أحرف على الأقل`);
+                return;
+            }
+
+            // Show loading state
+            submitButton.disabled = true;
+            submitButton.innerHTML = `
+      <div class="flex items-center justify-center">
+        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        جاري إنشاء الحساب...
+      </div>
+    `;
+        });
+
+        function calculatePasswordStrength(password) {
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            return strength;
+        }
+
+        function updatePasswordStrengthIndicator(strength) {
+            const colors = ['bg-red-300', 'bg-orange-300', 'bg-yellow-300', 'bg-green-300', 'bg-green-500'];
+            const texts = ['ضعيفة جداً', 'ضعيفة', 'متوسطة', 'قوية', 'قوية جداً'];
+
+            passwordStrengthBars.forEach((bar, index) => {
+                bar.className = `h-1 w-1/4 rounded-full ${index < strength ? colors[strength - 1] : 'bg-gray-200'}`;
+            });
+
+            if (passwordStrengthText) {
+                passwordStrengthText.textContent = `قوة كلمة المرور: ${texts[strength - 1] || 'ضعيفة جداً'}`;
+            }
+        }
+
+        // Enhanced form interactions
+        const inputs = form.querySelectorAll('input[type="email"], input[type="password"], input[type="text"]');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('ring-2', 'ring-purple-500');
+            });
+
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('ring-2', 'ring-purple-500');
+            });
+        });
+    });
+</script>
