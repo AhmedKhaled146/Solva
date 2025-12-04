@@ -118,6 +118,63 @@ class WorkspacesController < ApplicationController
     end
   end
 
+  def invite
+    @workspace = Workspace.find(params[:id])
+    authorize_workspace_owner
+  end
+
+  def send_invite
+    @workspace = Workspace.find(params[:id])
+    authorize_workspace_owner
+
+    email = params[:email].to_s.strip
+
+    if email.blank?
+      redirect_to join_from_email(@workspace), alert: "Email can't be blank"
+      return
+    end
+
+    WorkspaceInviteMailer.invite_email(email, @workspace).deliver_now
+
+    redirect_to @workspace, notice: "Invitation sent to #{email}"
+  end
+
+  def join_from_email
+    token = params[:token]
+    @workspace = Workspace.find_by(invited_token: token)
+
+    if @workspace.nil?
+      redirect_to root_path, alert: "Invalid invite link"
+      return
+    end
+
+    unless user_signed_in?
+      redirect_to new_user_session_path(return_to: join_from_email_workspace_path(token))
+      return
+    end
+  end
+
+  def confirm_join_from_email
+    token = params[:token]
+    @workspace = Workspace.find_by(invited_token: token)
+
+    if @workspace.nil?
+      redirect_to root_path, alert: "Invalid invite link"
+      return
+    end
+
+    membership = @workspace.memberships.find_or_initialize_by(user: current_user)
+
+    if membership.persisted?
+      redirect_to @workspace, notice: "You already joined this workspace."
+    else
+      membership.role = :member
+      membership.save
+      redirect_to @workspace, notice: "Welcome to #{@workspace.name}!"
+    end
+  end
+
+
   private
     def set_workspace
       @workspace = Workspace.find(params[:id])

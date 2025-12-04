@@ -47,12 +47,12 @@
                   <p class="text-sm font-medium overflow-auto max-w-[200px]"><%= user.email %></p>
                   <p class="text-xs text-gray-500">
                     <% membership = @workspace.memberships.find { |m| m.user_id == user.id } %>
-                    <%= membership&.role || "member" %>
+                    <%= membership.role || "member" %>
                   </p>
                 </div>
               </div>
               <span class="text-xs px-2 py-1 rounded-full
-                         <%= case membership&.role
+                         <%= case membership.role
                              when "owner" then "bg-yellow-100 text-yellow-800"
                              when "admin" then "bg-purple-100 text-purple-800"
                              else "bg-gray-100 text-gray-600"
@@ -80,7 +80,7 @@
       <%= render @channel.messages %>
     </div>
     <!-- Message Input -->
-    <div class="bg-white border-t p-4">
+    <div class="bg-white border-t p-4 sticky bottom-0">
       <%= form_with(
             model: [@workspace, @channel, Message.new],
             url: workspace_channel_messages_path(@workspace, @channel),
@@ -95,9 +95,10 @@
       <% end %>
     </div>
   </div>
-  <turbo-frame id="message_thread" class="w-[400px] hidden w-96 border-l border-gray-200 bg-white overflow-y-auto relative shadow-lg">
-  </turbo-frame>
-</div>
+
+    <turbo-frame id="message_thread" class="hidden w-[400px] border-l border-gray-200 bg-white shadow-lg h-screen flex flex-col">
+    </turbo-frame>
+  </div>
 
 <script>
     document.addEventListener("turbo:frame-load", (event) => {

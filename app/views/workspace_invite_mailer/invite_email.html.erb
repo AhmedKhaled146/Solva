@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Welcome to Solva!</h1>
+    <p>
+      Hello,
+    </p>
+    <p>
+      You have been invited to join the workspace <strong><%= @workspace.name %></strong>.
+    </p>
+    <p>
+      Click the link below to join:
+    </p>
+    <p>
+      <%= link_to "Join #{@workspace.name}", @invite_url %>
+    </p>
+    <p>Thanks for joining!</p>
+  </body>
+</html>

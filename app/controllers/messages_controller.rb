@@ -22,7 +22,7 @@ class MessagesController < ApplicationController
         )
 
         format.html do
-          redirect_to workspace_channel_path(@workspace, @channel)
+          redirect_to workspace_channel_path(@workspace, @channel), status: :see_other
         end
       else
         format.html do
@@ -35,7 +35,6 @@ class MessagesController < ApplicationController
 
   def edit
   end
-
   def update
     if @message.update(message_params)
       respond_to do |format|
@@ -46,13 +45,19 @@ class MessagesController < ApplicationController
             partial: "messages/message",
             locals: { message: @message, workspace: @workspace, channel: @channel }
           )
+
           if request.headers["Turbo-Frame"] == "message_thread"
-             streams << turbo_stream.update(
-              "message_thread",
-              template: "messages/show",
+            streams << turbo_stream.replace(
+              "message_#{@message.id}",
+              partial: "messages/message",
               locals: { message: @message, workspace: @workspace, channel: @channel }
             )
+            streams << turbo_stream.update(
+              "edit_message_form",
+              ""
+            )
           end
+
           render turbo_stream: streams
         end
         format.html do

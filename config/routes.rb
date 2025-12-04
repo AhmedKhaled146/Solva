@@ -19,12 +19,21 @@ Rails.application.routes.draw do
       end
     end
     resources :memberships, only: [ :index, :update, :destroy ]
+    member do
+      get :invite
+      post :send_invite
+    end
   end
 
   devise_for :users
 
+  # join with button
   get "home/index"
   get "join/:invited_token", to: "workspaces#join", as: :join_workspace
+
+
+  get  "/workspaces/join_from_email/:token", to: "workspaces#join_from_email",   as: :join_from_email_workspace
+  post "/workspaces/join_from_email/:token", to: "workspaces#confirm_join_from_email", as: :confirm_join_from_email_workspace
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -32,6 +41,8 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
   mount ActionCable.server => '/cable'
+
+
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest

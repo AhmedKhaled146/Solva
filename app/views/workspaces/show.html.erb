@@ -22,22 +22,26 @@
             <%= @workspace.name %>
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm">
-            <% invite_link = "http://localhost:3000/workspaces/#{@workspace.invited_token}" %>
-            <div class="flex items-center gap-2 max-w-md">
-              <span
-                id="invite-link-<%= @workspace.id %>"
-                class="text-xs text-gray-700 break-all"
-              >
-                <%= invite_link %>
-              </span>
+
+            <div class="flex items-center gap-3">
+
+              <% invite_link = "http://localhost:3000/workspaces/#{@workspace.invited_token}" %>
+
+              <!-- Copy Link Button -->
               <button
                 onclick="navigator.clipboard.writeText('<%= invite_link %>')"
-                class="px-2 py-1 border rounded text-sm text-indigo-600 hover:bg-indigo-50"
-                title="Copy invite link"
+                class="px-3 py-1 border rounded text-sm text-indigo-600 hover:bg-indigo-50"
               >
-                Copy
+                Copy Link
               </button>
+
+              <!-- Invite Someone Button -->
+              <%= link_to "Invite Someone",
+                          invite_workspace_path(@workspace),
+                          class: "px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700" %>
+
             </div>
+
           </td>
         </tr>
         </tbody>
