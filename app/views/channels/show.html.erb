@@ -1,57 +1,67 @@
+<!-- Channel Show Page -->
 <%= turbo_stream_from "channel_#{@channel.id}" %>
 
-<div id="channel-show" data-channel-id="<%= @channel.id %>" class="flex bg-gray-100 w-full">
+<div id="channel-show" data-channel-id="<%= @channel.id %>" class="flex bg-gray-50 h-screen">
   <!-- Channel Details Sidebar -->
-  <div class="max-w-[400px] bg-white border-r h-screen flex flex-col">
-    <div class="p-4 flex-1 overflow-y-auto">
-      <h2 class="text-xl font-bold mb-4">Channel Details</h2>
-      <div class="border rounded-lg overflow-hidden">
-        <table class="w-full">
-          <tbody>
-          <tr class="border-b">
-            <td class="px-4 py-2 bg-gray-50 text-sm text-gray-600">Channel Name</td>
-            <td class="px-4 py-2 font-medium"><%= @channel.name %></td>
-          </tr>
-          <tr class="border-b">
-            <td class="px-4 py-2 bg-gray-50 text-sm text-gray-600">Description</td>
-            <td class="px-4 py-2 font-medium"><%= @channel.description %></td>
-          </tr>
-          <tr class="border-b">
-            <td class="px-4 py-2 bg-gray-50 text-sm text-gray-600">Privacy</td>
-            <td class="px-4 py-2 font-medium capitalize"><%= @channel.privacy %></td>
-          </tr>
-          <tr>
-            <td class="px-4 py-2 bg-gray-50 text-sm text-gray-600">Created</td>
-            <td class="px-4 py-2 font-medium"><%= @channel.created_at.strftime("%B %d, %Y") %></td>
-          </tr>
-          </tbody>
-        </table>
+  <div class="w-80 bg-white border-r border-gray-200 flex flex-col">
+    <div class="p-6 flex-1 overflow-y-auto">
+      <!-- Header -->
+      <div class="mb-6">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Channel Details</h2>
+        <div class="h-1 w-16 bg-indigo-600 rounded-full"></div>
+      </div>
+
+      <!-- Channel Information -->
+      <div class="bg-white rounded-lg border border-gray-200 overflow-hidden mb-6">
+        <div class="bg-gray-50 px-4 py-2 border-b border-gray-200">
+          <h3 class="text-sm font-medium text-gray-700">Channel Information</h3>
+        </div>
+        <div class="divide-y divide-gray-200">
+          <div class="px-4 py-3">
+            <div class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Channel Name</div>
+            <div class="text-sm font-medium text-gray-900"># <%= @channel.name %></div>
+          </div>
+          <div class="px-4 py-3">
+            <div class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Description</div>
+            <div class="text-sm text-gray-900"><%= @channel.description.presence || 'No description' %></div>
+          </div>
+          <div class="px-4 py-3">
+            <div class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Privacy</div>
+            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <%= @channel.privacy == 'public' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
+              <%= @channel.privacy.capitalize %>
+            </span>
+          </div>
+          <div class="px-4 py-3">
+            <div class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Created</div>
+            <div class="text-sm text-gray-900"><%= @channel.created_at.strftime("%B %d, %Y") %></div>
+          </div>
+        </div>
       </div>
 
       <!-- Workspace Members Section -->
-      <div class="mt-6">
-        <div class="flex justify-between items-center mb-3">
-          <h3 class="text-lg font-semibold">Workspace Members</h3>
-          <%= link_to "Show all users",
-                      workspace_memberships_path(@workspace),
-                      class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+      <div class="mb-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-semibold text-gray-900">Workspace Members</h3>
+          <%= link_to workspace_memberships_path(@workspace),
+                      class: "inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md text-indigo-600 hover:text-indigo-800 border border-indigo-600 hover:border-indigo-800 transition-colors duration-150" do %>
+            View All
+          <% end %>
         </div>
+
         <div class="space-y-2">
           <% @workspace.users.each do |user| %>
-            <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+            <% membership = @workspace.memberships.find { |m| m.user_id == user.id } %>
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100">
               <div class="flex items-center">
-                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white">
+                <div class="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center text-white font-medium">
                   <%= user.email.first.upcase %>
                 </div>
-                <div class="ml-2">
-                  <p class="text-sm font-medium overflow-auto max-w-[200px]"><%= user.email %></p>
-                  <p class="text-xs text-gray-500">
-                    <% membership = @workspace.memberships.find { |m| m.user_id == user.id } %>
-                    <%= membership.role || "member" %>
-                  </p>
+                <div class="ml-3">
+                  <p class="text-sm font-medium text-gray-900 truncate max-w-[150px]"><%= user.email %></p>
+                  <p class="text-xs text-gray-500"><%= membership.role || "member" %></p>
                 </div>
               </div>
-              <span class="text-xs px-2 py-1 rounded-full
+              <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
                          <%= case membership.role
                              when "owner" then "bg-yellow-100 text-yellow-800"
                              when "admin" then "bg-purple-100 text-purple-800"
@@ -64,46 +74,103 @@
         </div>
       </div>
 
-      <%= link_to 'Back', @workspace, class: "mt-4 inline-block bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
+      <!-- Back Button -->
+      <div class="pt-4 border-t border-gray-200">
+        <%= link_to @workspace,
+                    class: "inline-flex items-center w-full justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-150" do %>
+          <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Back to Workspace
+        <% end %>
+      </div>
     </div>
   </div>
 
   <!-- Main Chat Area -->
-  <div class="flex-1 flex flex-col h-screen">
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Channel Header -->
+    <div class="bg-white border-b border-gray-200 px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <div class="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center mr-3">
+            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold text-gray-900"># <%= @channel.name %></h1>
+            <p class="text-sm text-gray-500"><%= @channel.description.presence || 'No description' %></p>
+          </div>
+        </div>
+        <div class="text-xs text-gray-400">
+          <%= @channel.privacy.capitalize %> channel
+        </div>
+      </div>
+    </div>
 
-  <!-- Channel Header -->
-    <div class="bg-white border-b px-6 py-4">
-      <h1 class="text-xl font-bold"># <%= @channel.name %></h1>
-    </div>
     <!-- Messages Area -->
-    <div class="flex-1 overflow-y-auto p-4 space-y-4" id="messages">
-      <%= render @channel.messages %>
+    <div id="messages" class="flex-1 overflow-y-auto p-6 bg-gray-50">
+      <% if @channel.messages.empty? %>
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No messages yet</h3>
+          <p class="mt-1 text-sm text-gray-500">Start the conversation by sending a message.</p>
+        </div>
+      <% else %>
+        <div class="space-y-4">
+          <%= render @channel.messages, current_user: current_user %>
+        </div>
+      <% end %>
     </div>
+
     <!-- Message Input -->
-    <div class="bg-white border-t p-4 sticky bottom-0">
-      <%= form_with(
+    <div id="messages" class="flex-1 overflow-y-auto p-6 bg-gray-50">
+    <%= form_with(
             model: [@workspace, @channel, Message.new],
             url: workspace_channel_messages_path(@workspace, @channel),
             local: true,
-            class: "flex items-center space-x-2"
+            class: "flex items-end space-x-3"
           ) do |f| %>
-        <%= f.text_field :body,
-                         placeholder: "Type your message...",
-                         class: "flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" %>
-        <%= f.submit "Send",
-                     class: "bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded" %>
+        <div class="flex-1">
+          <div class="relative">
+            <%= f.text_area :body,
+                            rows: 1,
+                            placeholder: "Type your message...",
+                            class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none text-sm",
+                            onkeydown: "if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); this.form.submit(); }" %>
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+              <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+            </div>
+          </div>
+          <p class="mt-1 text-xs text-gray-500">Press Enter to send, Shift+Enter for new line</p>
+        </div>
+        <%= f.button type: "submit",
+                     class: "inline-flex items-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-150" do %>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+          </svg>
+        <% end %>
       <% end %>
     </div>
   </div>
 
-    <turbo-frame id="message_thread" class="hidden w-[400px] border-l border-gray-200 bg-white shadow-lg h-screen flex flex-col">
-    </turbo-frame>
-  </div>
+  <!-- Thread Panel (Hidden by default) -->
+  <turbo-frame id="message_thread" class="hidden w-96 border-l border-gray-200 bg-white shadow-lg flex flex-col min-h-0">
+  </turbo-frame>
+</div>
 
-<script>
-    document.addEventListener("turbo:frame-load", (event) => {
-        if (event.target.id === "message_thread") {
-            event.target.classList.remove("hidden");
-        }
-    });
-</script>
+<style>
+    /* Smooth transitions for thread panel */
+    .turbo-frame {
+        transition: all 0.3s ease;
+    }
+
+    .turbo-frame:not(.hidden) {
+        transform: translateX(0);
+    }
+</style>

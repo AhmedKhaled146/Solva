@@ -1,21 +1,37 @@
-<div class="bg-gray-50 flex flex-col py-12 sm:px-6 lg:px-8 m-5 w-full">
+<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
   <div class="sm:mx-auto sm:w-full sm:max-w-md">
-    <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+    <div class="flex justify-center">
+      <div class="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center">
+        <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+      </div>
+    </div>
+    <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
       Create New Channel
     </h2>
+    <p class="mt-2 text-center text-sm text-gray-600">
+      Create a new channel for your workspace
+    </p>
   </div>
 
   <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-    <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-      <%= form_with model: [ @workspace, @channel ], class: "space-y-6" do |form| %>
+    <div class="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10 border border-gray-200">
+      <%= form_with model: [@workspace, @channel], class: "space-y-6" do |form| %>
+        <!-- Error Messages -->
         <% if @channel.errors.any? %>
-          <div class="rounded-md bg-red-50 p-4">
+          <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
             <div class="flex">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+              </div>
               <div class="ml-3">
-                <h3 class="text-sm font-medium text-red-800">
+                <h3 class="text-sm font-medium">
                   <%= pluralize(@channel.errors.count, "error") %> prohibited this channel from being saved:
                 </h3>
-                <div class="mt-2 text-sm text-red-700">
+                <div class="mt-2 text-sm">
                   <ul class="list-disc pl-5 space-y-1">
                     <% @channel.errors.full_messages.each do |message| %>
                       <li><%= message %></li>
@@ -26,54 +42,110 @@
             </div>
           </div>
         <% end %>
-
+        <!-- Workspace Display -->
         <div>
-          <div class="block text-sm font-medium text-gray-700 mb-2">Workspace</div>
-          <div class="mt-1 bg-gray-50 px-3 py-2 border border-gray-300 rounded-md shadow-sm text-gray-500">
-            <%= @workspace.name %>
-          </div>
-        </div>
-
-        <div>
-          <%= form.label :name, class: "block text-sm font-medium text-gray-700" %>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Workspace
+          </label>
           <div class="mt-1">
-            <%= form.text_field :name,
-                                class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
-                                placeholder: "Enter channel name" %>
+            <div class="relative">
+              <div class="bg-gray-50 px-3 py-2 border border-gray-300 rounded-md shadow-sm text-gray-600 flex items-center">
+                <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                <%= @workspace.name %>
+              </div>
+            </div>
           </div>
         </div>
-
+        <!-- Channel Name Field -->
         <div>
-          <%= form.label :description, class: "block text-sm font-medium text-gray-700" %>
+          <label for="channel_name" class="block text-sm font-medium text-gray-700">
+            Channel Name
+          </label>
           <div class="mt-1">
-            <%= form.text_area :description,
-                               class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
-                               rows: 4,
-                               placeholder: "Enter channel description" %>
+            <input id="channel_name"
+                   name="channel[name]"
+                   type="text"
+                   required
+                   class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                   placeholder="Enter channel name">
           </div>
+          <p class="mt-2 text-sm text-gray-500">
+            Required. Use lowercase letters, numbers, and hyphens only
+          </p>
         </div>
-
-        <% can_create_private = @workspace.role_owner?(current_user) || @workspace.role_admin?(current_user) %>
-
+        <!-- Description Field -->
         <div>
-          <%= form.label :privacy, class: "block text-sm font-medium text-gray-700" %>
+          <label for="channel_description" class="block text-sm font-medium text-gray-700">
+            Description
+          </label>
           <div class="mt-1">
-            <%= form.select :privacy,
-                            options_for_select(
-                              can_create_private ?
-                                [["Public", "public"], ["Private", "private"]] :
-                                [["Public", "public"]]
-                            ),
-                            {},
-                            class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+            <textarea id="channel_description"
+                      name="channel[description]"
+                      rows="4"
+                      class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      placeholder="Enter channel description (optional)"></textarea>
           </div>
+          <p class="mt-2 text-sm text-gray-500">
+            Optional: Provide a brief description of this channel's purpose
+          </p>
         </div>
-
+        <!-- Privacy Field -->
         <div>
-          <%= form.submit "Create Channel",
-                          class: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+          <label for="channel_privacy" class="block text-sm font-medium text-gray-700">
+            Privacy
+          </label>
+          <div class="mt-1">
+            <% can_create_private = @workspace.role_owner?(current_user) || @workspace.role_admin?(current_user) %>
+            <select id="channel_privacy"
+                    name="channel[privacy]"
+                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              <% if can_create_private %>
+                <option value="public">Public</option>
+                <option value="private">Private</option>
+              <% else %>
+                <option value="public" selected>Public</option>
+              <% end %>
+            </select>
+          </div>
+          <% if can_create_private %>
+            <p class="mt-2 text-sm text-gray-500">
+              Public channels are visible to all workspace members. Private channels are restricted to invited members.
+            </p>
+          <% else %>
+            <p class="mt-2 text-sm text-gray-500">
+              Only public channels can be created. Contact a workspace admin to create private channels.
+            </p>
+          <% end %>
+        </div>
+        <!-- Submit Button -->
+        <div>
+          <button type="submit"
+                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-150">
+            <span class="mr-2">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+            </span>
+            Create Channel
+          </button>
         </div>
       <% end %>
+      <!-- Cancel Button -->
+      <div class="mt-6">
+        <div class="mt-6">
+          <%= link_to workspace_channels_path(@workspace),
+                      class: "w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-150" do %>
+            <span class="mr-2">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </span>
+            Cancel
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
 </div>

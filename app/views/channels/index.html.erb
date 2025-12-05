@@ -1,61 +1,176 @@
 <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
   <div class="py-8">
-    <div class="mt-8 px-6">
-  <div class="flex justify-between items-center mb-4">
-    <h3 class="text-lg font-semibold text-gray-800">Channels</h3>
-    <div class="flex space-x-4">
-      <%= link_to 'New Channel', new_workspace_channel_path(@workspace),
-                  class: 'inline items-center px-4 py-2 border border-indigo-600 rounded-md text-sm font-medium text-indigo-600 hover:bg-indigo-600 hover:text-white transition-colors duration-150' %>
-      <%= link_to 'Back', workspace_path(@workspace), class: "inline bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
+    <!-- Header Section -->
+    <div class="mb-8">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+        <div class="mb-4 sm:mb-0">
+          <h1 class="text-2xl font-bold text-gray-900">Channels</h1>
+          <p class="mt-1 text-sm text-gray-500">Manage workspace channels</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <%= link_to 'New Channel', new_workspace_channel_path(@workspace),
+                      class: 'inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-150' %>
+          <%= link_to 'Back', workspace_path(@workspace),
+                      class: 'inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-150' %>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="overflow-x-auto">
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50">
-      <tr>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-          Name
-        </th>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-          Description
-        </th>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-          Privacy
-        </th>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-          Actions
-        </th>
-      </tr>
-      </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
-      <% @channels.each do |channel| %>
-        <tr>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-            <%= channel.name %>
-          </td>
-          <td class="px-6 py-4 text-sm text-gray-900">
-            <%= channel.description %>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-            <%= channel.privacy %>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm">
-            <div class="flex gap-2">
-              <%= link_to 'View', workspace_channel_path(@workspace, channel),
-                          class: 'text-indigo-600 hover:text-indigo-900' %>
-              <%= link_to 'Edit', edit_workspace_channel_path(@workspace, channel),
-                          class: 'text-indigo-600 hover:text-indigo-900' %>
-              <%= button_to 'Delete', workspace_channel_path(@workspace, channel),
-                            method: :delete,
-                            data: { turbo_confirm: "Are you sure?" },
-                            class: 'text-red-600 hover:text-red-900 bg-transparent border-none p-0' %>
-            </div>
-          </td>
-        </tr>
+
+    <!-- Channels Table -->
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Channel List</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">All available channels in the workspace</p>
+      </div>
+
+      <!-- Empty State -->
+      <% if @channels.empty? %>
+        <div class="text-center py-12 px-4 sm:px-6 lg:px-8">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No channels yet</h3>
+          <p class="mt-1 text-sm text-gray-500">Get started by creating your first channel to organize conversations.</p>
+          <div class="mt-6">
+            <%= link_to 'Create New Channel', new_workspace_channel_path(@workspace),
+                        class: 'inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500' %>
+          </div>
+        </div>
+      <% else %>
+        <!-- Table Content -->
+        <div class="border-t border-gray-200">
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Channel Name
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Description
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Privacy
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+              <% @channels.each do |channel| %>
+                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-10 w-10">
+                        <div class="h-10 w-10 rounded-full bg-indigo-500 flex items-center justify-center">
+                            <span class="text-sm font-medium text-white">
+                              <%= channel.name.first(2).upcase %>
+                            </span>
+                        </div>
+                      </div>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900">
+                          <%= channel.name %>
+                        </div>
+                        <div class="text-sm text-gray-500">
+                          <%= channel.privacy %>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="text-sm text-gray-900">
+                      <%= channel.description.presence || 'No description' %>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <%= channel.privacy == 'public' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
+                        <%= channel.privacy == 'public' ? 'Public' : 'Private' %>
+                      </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div class="flex items-center space-x-2">
+                      <%= link_to 'View', workspace_channel_path(@workspace, channel),
+                                  class: 'text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md transition-colors duration-150' %>
+                      <%= link_to 'Edit', edit_workspace_channel_path(@workspace, channel),
+                                  class: 'text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded-md transition-colors duration-150' %>
+                      <%= button_to 'Delete', workspace_channel_path(@workspace, channel),
+                                    method: :delete,
+                                    data: { turbo_confirm: "Are you sure to delete this channel?" },
+                                    class: 'text-red-600 hover:text-red-900 bg-transparent border-none p-0' %>                    </div>
+                  </td>
+                </tr>
+              <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
       <% end %>
-      </tbody>
-    </table>
-  </div>
-</div>
+    </div>
+
+    <!-- Statistics -->
+    <% if @channels.any? %>
+      <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-3">
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Total Channels</dt>
+                  <dd class="text-lg font-medium text-gray-900"><%= @channels.count %></dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Public Channels</dt>
+                  <dd class="text-lg font-medium text-gray-900">
+                    <%= @channels.count { |c| c.privacy == 'public' } %>
+                  </dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Private Channels</dt>
+                  <dd class="text-lg font-medium text-gray-900">
+                    <%= @channels.count { |c| c.privacy == 'private' } %>
+                  </dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>

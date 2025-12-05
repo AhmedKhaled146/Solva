@@ -13,14 +13,6 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
       if @message.save
-        ChannelMessagesChannel.broadcast_to(
-          @channel,
-          render_to_string(
-            partial: "messages/message",
-            locals: { message: @message }
-          )
-        )
-
         format.html do
           redirect_to workspace_channel_path(@workspace, @channel), status: :see_other
         end

@@ -18,8 +18,6 @@ class RepliesController < ApplicationController
 
     respond_to do |format|
       if @reply.save
-        # مش محتاجين broadcast هنا لأن المودل هيعمله
-        
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace(
             "reply_form_#{@message.id}",
@@ -27,7 +25,6 @@ class RepliesController < ApplicationController
             locals: { message: @message, reply: Reply.new, workspace: @workspace, channel: @channel }
           )
         end
-
         format.html { redirect_to workspace_channel_path(@workspace, @channel) }
       else
         format.turbo_stream do
