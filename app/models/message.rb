@@ -7,8 +7,12 @@ class Message < ApplicationRecord
     broadcast_append_to(
       "channel_#{channel_id}",
       partial: "messages/message",
-      locals: { message: self },
+      locals: { message: self, current_user: user },
       target: "messages"
+    )
+    broadcast_remove_to(
+      "channel_#{channel_id}",
+      target: "empty_state"
     )
   }
 
@@ -16,7 +20,7 @@ class Message < ApplicationRecord
     broadcast_replace_to(
       "channel_#{channel_id}",
       partial: "messages/message",
-      locals: { message: self }
+      locals: { message: self, current_user: user }
     )
   }
 

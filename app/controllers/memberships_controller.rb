@@ -1,87 +1,52 @@
 class MembershipsController < ApplicationController
+  include WorkspaceAuthorization
+  include MembershipAuthorization
+
   before_action :authenticate_user!
   before_action :set_workspace
   before_action :set_membership, only: [ :update, :destroy ]
-  before_action :authorize_admin!, only: [ :index, :update ]
-  before_action :authorize_owner_for_destroy!, only: [ :destroy ]
+  before_action :authorize_membership_update!, only: [ :index, :update ]
+  before_action :authorize_membership_destroy!, only: [ :destroy ]
 
   def index
     @memberships = @workspace.memberships.includes(:user)
   end
 
   def update
-    if @membership.role_owner? || @membership.user_id == current_user.id
-      redirect_to workspace_memberships_path(@workspace),
-                  alert: "You cannot change this user's role."
-      return
-    end
+    service = Memberships::RoleUpdater.new(@membership, membership_params, current_user)
 
-    if @membership.update(membership_params)
-      redirect_to workspace_memberships_path(@workspace),
-                  notice: "Role updated successfully."
+    if service.call
+      respond_with_success(
+        workspace_memberships_path(@workspace),
+        notice: "Role updated successfully."
+      )
     else
-      redirect_to workspace_memberships_path(@workspace),
-                  alert: @membership.errors.full_messages.to_sentence
+      respond_with_error(
+        workspace_memberships_path(@workspace),
+        alert: service.errors.first
+      )
     end
   end
 
   def destroy
-    if @membership.role_owner?
-      redirect_to workspace_memberships_path(@workspace),
-                  alert: "Owner cannot be removed from the workspace."
-      return
-    end
+    service = Memberships::Remover.new(@membership, current_user)
 
-    if @membership.user_id == current_user.id
-      redirect_to workspace_memberships_path(@workspace),
-                  alert: "You cannot remove yourself from the workspace."
-      return
+    if service.call
+      respond_with_success(
+        workspace_memberships_path(@workspace),
+        notice: "User removed from workspace."
+      )
+    else
+      respond_with_error(
+        workspace_memberships_path(@workspace),
+        alert: service.errors.first
+      )
     end
-
-    @membership.destroy
-    redirect_to workspace_memberships_path(@workspace),
-                notice: "User removed from workspace."
   end
 
   private
 
-  def set_workspace
-    @workspace = Workspace.find(params[:workspace_id])
-  rescue ActiveRecord::RecordNotFound
-    respond_to do |format|
-      format.html do
-        redirect_to workspaces_path,
-                    alert: "Workspace not found."
-      end
-    end
-  end
-
-  def set_membership
-    @membership = @workspace.memberships.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    respond_to do |format|
-      format.html do
-        redirect_to workspace_memberships_path(@workspace),
-                    alert: "Membership not found."
-      end
-    end
-  end
-
   def membership_params
     params.require(:membership).permit(:role)
-  end
-
-  def authorize_admin!
-    unless @workspace.role_owner?(current_user) || @workspace.role_admin?(current_user)
-      redirect_to workspace_path(@workspace),
-                  alert: "You are not authorized to manage workspace members."
-    end
-  end
-
-  def authorize_owner_for_destroy!
-    unless @workspace.role_owner?(current_user)
-      redirect_to workspace_memberships_path(@workspace),
-                  alert: "Only the workspace owner can remove members."
-    end
   end
 end
