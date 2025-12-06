@@ -422,3 +422,74 @@ Real-time messaging using ActionCable/WebSockets can be added later to turn this
 - Stable, usable Slack-like MVP
 - Documented roles & permissions
 - Cleaner UI
+
+
+#### Sprint 6 – Channel Join & Message Display
+
+**Goal**: Users should properly join channels and view message history.
+
+**Tasks**:
+
+- Implement joining channels through workspace membership
+- Add channel membership checks before showing messages 
+- Load messages for a channel in chronological order
+- Add UI to show the selected channel and messages area
+- Prevent access to private channels without permission
+
+**Deliverables**:
+
+- Members can enter channels
+- Messages displayed per channel
+- Access control for public/private channels
+
+#### Sprint 7 – Chat Styling & Scrollable UI
+
+**Goal**: Improve the chat UX with a modern look.
+
+**Tasks**:
+
+- Tailwind styling for chat layout
+- Channel sidebar + chat main window structure
+- Make message list scrollable
+- Sticky footer form for message input
+- Improve message bubbles & timestamps
+
+**Deliverables**:
+
+- Clean Slack-like UI
+- Scrollable conversation area
+- Professional chat layout
+
+#### Sprint 8 – Testing (RSpec) + Bug Fixing
+
+**Goal**: Add essential test coverage + clean code.
+
+**Tasks**:
+
+- Model specs for:
+- Workspace
+- Membership
+- Channel
+- Message
+- Reply
+- Controller basic spec methods
+- Fix channel permissions issues
+- Handle missing users / missing messages bugs
+- Add validation tests
+
+**Deliverables**:
+
+- RSpec test suite up and running
+- Improved stability
+- Fixed edge cases
+- Cleaner code structure
+
+#### Sprint 9 – Follow SOLID and Design Patterns code
+
+**Goal**: Refactor my controllers + Learn Service + Learn Queries
+
+**Tasks & Deliverables**:
+
+- create services for (channel - membership - workspace)
+- create Queries for (channel - message - workspace)
+- create concerns files for manage controller
